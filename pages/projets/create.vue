@@ -7,7 +7,7 @@
       </div>
       <div class="card-body">
         <div v-if="isLoading">
-          <Loading :title="isLoadingTitle"/>
+          <Loading :title="isLoadingTitle" />
         </div>
         <div v-else>
           <form @submit.prevent="saveProject">
@@ -43,6 +43,10 @@
 
 <script>
 import axios from 'axios';
+import Vue from "vue";
+import VueCookie from 'vue-cookie';
+Vue.use(VueCookie);
+
 
 export default {
   data() {
@@ -55,66 +59,56 @@ export default {
         url: ''
       },
       isLoading: false,
-      isLoadingTitle: 'Loading'
+      isLoadingTitle: 'Loading',
+      token: ''
     };
   },
+
+  created() {
+    this.token = VueCookie.get("XSRF-TOKEN");
+    console.log(this.token)
+  },
+
   methods: {
     saveProject() {
-      let token = document.head.querySelector('meta[name="csrf-token"]');
 
-      if (token) {
-          window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-      } else {
-          console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+      let headers = {
+        headers: {
+          'X-XSRF-TOKEN': this.token
+        }
       }
-      
-      axios.defaults.headers.common['X-CSRF-TOKEN'] = $('meta[name="csrf-token"]').attr('content');
-
-      this.isLoading = true;
-      this.isLoadingTitle = 'Saving';
-
-      // Storing data using Laravel API with the help of axios
-      axios.post('http://localhost:8000/api/projets', this.Project).then(res => {
-        console.log(res.data.message);
-        alert(res.data.message);
-        this.isLoading = false;
-        this.isLoadingTitle = 'Loading';
-
-        this.Project.title = '';
-        this.Project.description = '';
-        this.Project.slug = '';
-        this.Project.url = '';
-        this.Project.status = '';
-      });
+      console.log(headers);
+      axios.post("http://localhost:8000/api/projets", this.Project, headers)
+        .then(res => console.log(res));
     }
-
-    // async saveProject(){
-  
-    //     this.isLoading = true;
-    //     this.isLoadingTitle = 'Saving';
-
-    //     const url ='http://localhost:8000/api/projets'
-
-      
-    //     const data = {...this.Project,}
-    //     const res = await this.$axios.$post(url,data)
-    //     if(res){
-    //           this.isLoading = false;
-    //           this.isLoadingTitle = 'Loading';
-    //       alert('Project created successfully')
-
-    //       this.Project.title = '';
-    //       this.Project.description = '';
-    //       this.Project.slug = '';
-    //       this.Project.url = '';
-    //       this.Project.status = '';
-    //     }
-    //     else{
-    //       alert('Error creating project')
-    //     }
-      
-    // }
   }
+
+  // async saveProject(){
+
+  //     this.isLoading = true;
+  //     this.isLoadingTitle = 'Saving';
+
+  //     const url ='http://localhost:8000/api/projets'
+
+
+  //     const data = {...this.Project,}
+  //     const res = await this.$axios.$post(url,data)
+  //     if(res){
+  //           this.isLoading = false;
+  //           this.isLoadingTitle = 'Loading';
+  //       alert('Project created successfully')
+
+  //       this.Project.title = '';
+  //       this.Project.description = '';
+  //       this.Project.slug = '';
+  //       this.Project.url = '';
+  //       this.Project.status = '';
+  //     }
+  //     else{
+  //       alert('Error creating project')
+  //     }
+
+  // }
 };
 </script>
 

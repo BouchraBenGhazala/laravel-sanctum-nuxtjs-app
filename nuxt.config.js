@@ -72,6 +72,7 @@ export default {
   ],
   
   axios: {
+    base_url : "http://localhost:8000",
     credentials: true,
   },
 
