@@ -77,7 +77,7 @@ export default {
         {
           title: 'Taches',
           icon: 'file-tree',
-          to: { name: 'tasks' }
+          to: { name: 'taches' }
         },
         {
           title: 'Suivi de progresse',

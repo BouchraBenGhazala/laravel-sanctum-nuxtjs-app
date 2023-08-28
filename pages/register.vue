@@ -8,6 +8,7 @@
 </template>
 <script>
 export default {
-  layout:'NoLayoutLogin',
+    auth:false,
+  layout:'NoLayoutRegister',
 }
 </script>

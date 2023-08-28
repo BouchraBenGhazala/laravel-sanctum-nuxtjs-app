@@ -2,7 +2,7 @@
   <div class="mt-5">
     <div class="card">
       <div class="card-header d-flex justify-content-between">
-        <h4 class="fs-5 fw-normal">Add Project</h4>
+        <h4 class="fs-5 fw-normal">Edit Project</h4>
         <NuxtLink to="/projets" class="btn btn-danger">Back</NuxtLink>
       </div>
       <div class="card-body">
@@ -11,7 +11,7 @@
           <Loading :title="isLoadingTitle" />
         </div>
         <div v-else>
-          <form @submit.prevent="saveProject">
+          <form @submit.prevent="updateProject">
             <div class="mb-3">
               <label for="title">Title</label>
               <input type="text" class="form-control" v-model="Project.title">
@@ -38,21 +38,22 @@
               <span class="text-danger" v-if="this.errorList.url">{{ this.errorList.url[0]}}</span>
             </div>
             <div class="mb-3">
-              <button type="submit" class="btn btn-primary">Save</button>
+              <button type="submit" class="btn btn-primary">Update</button>
             </div>
           </form>
         </div>
       </div>
     </div>
   </div>
-</template>
-
+  </template>
+  
 <script>
 import axios from 'axios';
 
 export default {
   data() {
     return {
+      ProjectId:'',
       Project: {
         title: '',
         description: '',
@@ -66,14 +67,33 @@ export default {
 
     }
   },
+  mounted(){
+    this.ProjectId= this.$route.params.id;
+    // alert(this.ProjectId)
+    this.getProject(this.ProjectId);
+
+  },
   methods: {
-    async saveProject() {
+    getProject(ProjectId){
+
       this.isLoading=true;
-      this.isLoadingTitle="Saving";
+      axios.get(`http://localhost:8000/api/projets/${ProjectId}/edit`).then(res=>{
+
+          this.isLoading =false,
+          this.Project=res.data.message;
+          console.log("data:");
+          console.log(res)
+      });
+    },
+
+    updateProject() {
+
+      this.isLoading =true,
+      this.isLoadingTitle="Updating";
 
       var myThis=this;
 
-      await axios.post("http://localhost:8000/api/projets", this.Project, {withCredentials:true})
+      axios.put(`http://localhost:8000/api/projets/${this.ProjectId}/update`, this.Project, {withCredentials:true})
         .then(res => {
           console.log(res,'res');
           alert(res.data.message);
@@ -90,7 +110,7 @@ export default {
         }).catch(function(error){
           console.log(error,'error')
           if(error.response){
-            if(error.response.status==422){
+            if(error.response.status==404){
               myThis.errorList= error.response.data.errors;
             }
           }
@@ -102,9 +122,4 @@ export default {
  
 };
 </script>
-
-<style scoped>
-.mt-5 {
-  padding: 20px;
-}
-</style>
+  

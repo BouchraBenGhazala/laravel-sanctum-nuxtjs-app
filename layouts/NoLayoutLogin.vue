@@ -26,6 +26,7 @@
             <b-button type="is-dark is-fullwidth" native-type="submit">
               Login
             </b-button>
+            <p>don't have an account? <a href="/register">Register</a></p>
           </form>
           <p style="color: red;">{{ errorMessage }}</p>
         </div>

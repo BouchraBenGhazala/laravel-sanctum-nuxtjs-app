@@ -1,4 +1,3 @@
-
 <template>
     <div>
         <div class="spinner-border text-primary" role="status">
@@ -16,6 +15,6 @@
     }
 </script>
 
-<style lang="scss" scoped>
+<style>
 
 </style>
