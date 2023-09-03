@@ -37,7 +37,17 @@
                 <input type="text" class="form-control" v-model="Task.due_date">
                 <span class="text-danger" v-if="this.errorList.due_date">{{ this.errorList.url[0]}}</span>
               </div>
-              <div class="mb-3">
+              <b-field label="User" class="mb-5">
+              <b-select placeholder="Select a user" v-model="Task.user_id" expanded>
+                  <option v-for="user in User" :key="user.id" :value="user.id">{{ user.name }}</option>
+              </b-select>
+          </b-field>
+          <b-field label="Project" class="mb-5">
+              <b-select placeholder="Select a projet" v-model="Task.projet_id" expanded>
+                  <option v-for="project in Projet" :key="project.id" :value="project.id">{{ project.title }}</option>
+              </b-select>
+          </b-field>
+          <div class="mb-3">
                 <button type="submit" class="btn btn-primary">Save</button>
               </div>
             </form>
@@ -58,13 +68,21 @@
           description: '',
           priority: '',
           type: '',
-          due_date: ''
+          due_date: '',
+          user_id:'',
+          projet_id:''
         },
+        User:[],
+        Projet:[],
         isLoading: false,
         isLoadingTitle: 'Loading',
         errorList:{}
   
       }
+    },
+    mounted(){
+      this.fetchUsers(); 
+      this.fetchProjets(); 
     },
     methods: {
       async saveTask() {
@@ -83,6 +101,8 @@
             this.Task.priority = '';
             this.Task.type = '';
             this.Task.due_date = '';
+            this.Task.user_id= '';
+            this.Task.projet_id = '';
   
             this.isLoading=false;
             this.isLoadingTitle="Loading";
@@ -96,7 +116,26 @@
             }
             myThis.isLoading=false;
           });
-      }
+      },
+      async fetchUsers() {
+            try {
+                const response = await axios.get("http://localhost:8000/api/users"); // Adjust the API endpoint URL
+                this.User = response.data.message; // Assuming roles data is returned as an array in the 'message' field
+
+            } catch (error) {
+                console.error('Error fetching roles:', error);
+            }
+        },
+        
+      async fetchProjets() {
+            try {
+                const response = await axios.get("http://localhost:8000/api/projets"); // Adjust the API endpoint URL
+                this.Projet= response.data.message; // Assuming roles data is returned as an array in the 'message' field
+
+            } catch (error) {
+                console.error('Error fetching roles:', error);
+            }
+        },
     }
   
    

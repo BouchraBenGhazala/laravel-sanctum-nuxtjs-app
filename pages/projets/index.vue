@@ -23,7 +23,7 @@
                     <th>Url</th>
                     <th>Created at</th>
                     <th>Updated at</th>
-                    <th>Deleted at</th>
+                    <!-- <th>Deleted at</th> -->
                     <th>Action</th>
                 </tr>
             </thead>
@@ -37,7 +37,7 @@
                     <td>{{ project.url}}</td>
                     <td>{{ project.created_at}}</td>
                     <td>{{ project.updated_at}}</td>
-                    <td>{{ project.deleted_at}}</td>
+                    <!-- <td>{{ project.deleted_at}}</td> -->
                     <td>
                         <NuxtLink :to="`/projets/${project.id}`" class="btn btn-success btn-sm mx-2">Edit</NuxtLink>
                         <button type="button" class="btn btn-danger btn-sm mx-2" @click="deleteProject($event,project.id)">Delete</button>

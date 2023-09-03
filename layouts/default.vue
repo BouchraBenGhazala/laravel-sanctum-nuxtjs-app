@@ -80,6 +80,11 @@ export default {
           to: { name: 'taches' }
         },
         {
+          title: 'Technologies',
+          icon: 'file-tree',
+          to: { name: 'technologies' }
+        },
+        {
           title: 'Suivi de progresse',
           icon: 'trending-up',
           to: { name: 'progress' }

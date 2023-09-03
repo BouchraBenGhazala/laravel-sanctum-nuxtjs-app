@@ -37,6 +37,25 @@
               <input type="text" class="form-control" v-model="Project.url">
               <span class="text-danger" v-if="this.errorList.url">{{ this.errorList.url[0]}}</span>
             </div>
+            <!-- <b-field label="Technologie" class="mb-5">
+              <b-select placeholder="Select a technologie" expanded>
+                  <option v-for="technologie in Technologie" :key="technologie.id" :value="technologie.id">{{ technologie.name }}</option>
+              </b-select>
+          </b-field> -->
+          <label for="technologies">Technologies</label>
+              <b-field>
+                <b-select
+                  v-model="selectedTechnologies"
+                  multiple
+                  expanded
+                  placeholder="Select technologies"
+                >
+                  <option v-for="technologie in Technologie" :key="technologie.id" :value="technologie.id">
+                    {{ technologie.name }}
+                  </option>
+                </b-select>
+              </b-field>
+
             <div class="mb-3">
               <button type="submit" class="btn btn-primary">Save</button>
             </div>
@@ -54,18 +73,25 @@ export default {
   data() {
     return {
       Project: {
+        id:'',
         title: '',
         description: '',
         slug: '',
         status: '',
-        url: ''
+        url: '',
       },
+      selectedTechnologies: [], // Array to store selected technology IDs
+      Technologie:[],
       isLoading: false,
       isLoadingTitle: 'Loading',
-      errorList:{}
+      errorList:{},
+      lastProjectId:null,
 
     }
   },
+  mounted(){
+      this.fetchTechnologies(); 
+    },
   methods: {
     async saveProject() {
       this.isLoading=true;
@@ -73,10 +99,14 @@ export default {
 
       var myThis=this;
 
-      await axios.post("http://localhost:8000/api/projets", this.Project, {withCredentials:true})
-        .then(res => {
+      this.Project.technologies = this.selectedTechnologies; // Assign selected technologies to the project object
+
+      await axios.post("http://localhost:8000/api/projets", {'project': this.Project, 'selectedTechnologies' : this.selectedTechnologies}, { withCredentials: true })
+      .then(res => {
           console.log(res,'res');
           alert(res.data.message);
+
+          this.lastProjectId=this.Project.id;
 
           this.Project.title = '';
           this.Project.description = '';
@@ -96,11 +126,29 @@ export default {
           }
           myThis.isLoading=false;
         });
-    }
+
+
+          
+
+
+    },
+    async fetchTechnologies() {
+            try {
+                const response = await axios.get("http://localhost:8000/api/technologies"); // Adjust the API endpoint URL
+                this.Technologie = response.data.message; // Assuming roles data is returned as an array in the 'message' field
+
+            } catch (error) {
+                console.error('Error fetching technologies:', error);
+            }
+        },
+
+
+            
+        }
+      
   }
 
- 
-};
+
 </script>
 
 <style scoped>

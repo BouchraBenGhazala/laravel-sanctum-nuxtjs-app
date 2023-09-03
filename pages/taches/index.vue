@@ -19,10 +19,12 @@
                     <th>Description</th>
                     <th>Priority</th>
                     <th>Type</th>
+                    <th>User name</th>
+                    <th>Project title</th>
                     <th>Due Date</th>
                     <th>Created at</th>
                     <th>Updated at</th>
-                    <th>Deleted at</th>
+                    <!-- <th>Deleted at</th> -->
                     <th>Action</th>
                 </tr>
             </thead>
@@ -33,10 +35,12 @@
                     <td>{{ task.description}}</td>
                     <td>{{ task.priority}}</td>
                     <td>{{ task.type}}</td>
+                    <td>{{ task.user.name}}</td>
+                    <td>{{ task.project.title}}</td>
                     <td>{{ task.due_date}}</td>
                     <td>{{ task.created_at}}</td>
                     <td>{{ task.updated_at}}</td>
-                    <td>{{ task.deleted_at}}</td>
+                    <!-- <td>{{ task.deleted_at}}</td> -->
                     <td>
                         <NuxtLink :to="`/taches/${task.id}`" class="btn btn-success btn-sm mx-2">Edit</NuxtLink>
                         <button type="button" class="btn btn-danger btn-sm mx-2" @click="deleteTask($event,task.id)">Delete</button>
@@ -49,7 +53,7 @@
       </div>
         </div>
       <div class="card-body">
-
+  
         </div>
     </div>
 </template>

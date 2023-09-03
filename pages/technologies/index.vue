@@ -1,9 +1,10 @@
+
 <template>
     <div>
         <div class="card mt-5 mr-5" >
             <div class="card-header d-flex justify-content-between">
-        <h4 class="fs-5 fw-normal">Users List</h4>
-        <!-- <NuxtLink to="/taches/create" class="btn btn-danger">Add Task</NuxtLink> -->
+        <h4 class="fs-5 fw-normal">Technologies</h4>
+        <NuxtLink to="/technologies/create" class="btn btn-danger">Add Technologie</NuxtLink>
       </div>
 
         <div class="card-body">
@@ -16,24 +17,22 @@
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
+                    <th>Created at</th>
+                    <th>Updated at</th>
                     <th>Action</th>
-
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(user,index) in Users" :key="index"> 
-                    <td>{{ user.id}}</td>
-                    <td>{{ user.name}}</td>
-                    <td>{{ user.email}}</td>
-                    <td>{{ user.role.name}}</td>
-
+                <tr v-for="(technologie,index) in Technologies" :key="index"> 
+                    <td>{{ technologie.id}}</td>
+                    <td>{{ technologie.name}}</td>
+                    <td>{{ technologie.created_at}}</td>
+                    <td>{{ technologie.updated_at}}</td>
+                    <!-- <td>{{ task.deleted_at}}</td> -->
                     <td>
-                        <NuxtLink :to="`/users/${user.id}`" class="btn btn-success btn-sm mx-2">Edit</NuxtLink>
-                        <button type="button" class="btn btn-danger btn-sm mx-2" @click="deleteUser($event,user.id)">Delete</button>
+                        <NuxtLink :to="`/technologies/${technologie.id}`" class="btn btn-success btn-sm mx-2">Edit</NuxtLink>
+                        <button type="button" class="btn btn-danger btn-sm mx-2" @click="deleteTechnologie($event,technologie.id)">Delete</button>
                     </td> 
-        
                 </tr>
             </tbody>
         </table>
@@ -52,35 +51,35 @@ import axios from 'axios';
     export default {
         data(){
             return{
-                Users:{},
+                Technologies:{},
                 isLoading: true,
                 isLoadingTitle: 'Loading',
             };
 
         },
         mounted(){
-            this.getUsers();
+            this.getTechnologies();
         },
         methods:{
-            getUsers(){
-                axios.get("http://localhost:8000/api/users").then(res=>{
+            getTechnologies(){
+                axios.get("http://localhost:8000/api/technologies").then(res=>{
 
                     this.isLoading =false,
-                    this.Users=res.data.message;
+                    this.Technologies=res.data.message;
                     console.log("data:");
                     console.log(res)
                 });
             },
 
-            deleteUser(event, userId){
+            deleteTechnologie(event, technologieId){
 
                 if(confirm('Are you sure, you want to delete this data?')){
 
                     event.target.innerText= 'Deleting';
 
-                    axios.delete(`http://localhost:8000/api/users/${userId}/delete`,{withCredentials:true}).then(res=>{
+                    axios.delete(`http://localhost:8000/api/technologies/${technologieId}/delete`,{withCredentials:true}).then(res=>{
                         event.target.innerText= 'Delete';
-                        this.getUsers();
+                        this.getTechnologies();
                         
                     });
                 }
