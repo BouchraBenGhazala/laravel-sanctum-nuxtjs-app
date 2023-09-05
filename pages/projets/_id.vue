@@ -37,6 +37,19 @@
               <input type="text" class="form-control" v-model="Project.url">
               <span class="text-danger" v-if="this.errorList.url">{{ this.errorList.url[0]}}</span>
             </div>
+            <label for="technologies">Technologies</label>
+              <b-field>
+                <b-select
+                  v-model="selectedTechnologies"
+                  multiple
+                  expanded
+                  placeholder="Select technologies"
+                >
+                  <option v-for="technologie in Technologie" :key="technologie.id" :value="technologie.id">
+                    {{ technologie.name }}
+                  </option>
+                </b-select>
+              </b-field>
             <div class="mb-3">
               <button type="submit" class="btn btn-primary">Update</button>
             </div>
@@ -61,6 +74,8 @@ export default {
         status: '',
         url: ''
       },
+      selectedTechnologies: [], // Array to store selected technology IDs
+      Technologie:[],
       isLoading: false,
       isLoadingTitle: 'Loading',
       errorList:{}
@@ -71,6 +86,7 @@ export default {
     this.ProjectId= this.$route.params.id;
     // alert(this.ProjectId)
     this.getProject(this.ProjectId);
+    this.fetchTechnologies(); 
 
   },
   methods: {
@@ -87,10 +103,9 @@ export default {
     },
 
     updateProject() {
-
       this.isLoading =true,
       this.isLoadingTitle="Updating";
-
+      
       var myThis=this;
 
       axios.put(`http://localhost:8000/api/projets/${this.ProjectId}/update`, this.Project, {withCredentials:true})
@@ -116,7 +131,16 @@ export default {
           }
           myThis.isLoading=false;
         });
-    }
+    },
+    async fetchTechnologies() {
+            try {
+                const response = await axios.get("http://localhost:8000/api/technologies"); // Adjust the API endpoint URL
+                this.Technologie = response.data.message; // Assuming roles data is returned as an array in the 'message' field
+
+            } catch (error) {
+                console.error('Error fetching technologies:', error);
+            }
+        },
   }
 
  

@@ -21,6 +21,7 @@
                     <th>Slug</th>
                     <th>Status</th>
                     <th>Url</th>
+                    <th>Technologies</th>
                     <th>Created at</th>
                     <th>Updated at</th>
                     <!-- <th>Deleted at</th> -->
@@ -35,6 +36,13 @@
                     <td>{{ project.slug}}</td>
                     <td>{{ project.status}}</td>
                     <td>{{ project.url}}</td>
+                    <td>
+                <ul>
+                  <li v-for="technologie in project.technologies" :key="technologie.id">
+                    {{ technologie.name }}
+                  </li>
+                </ul>
+              </td>
                     <td>{{ project.created_at}}</td>
                     <td>{{ project.updated_at}}</td>
                     <!-- <td>{{ project.deleted_at}}</td> -->
@@ -77,6 +85,8 @@ import axios from 'axios';
                     this.Projects=res.data.message;
                     console.log("data:");
                     console.log(res)
+                    console.log("else...")
+                    console.log(Projects.title)
                 });
             },
 

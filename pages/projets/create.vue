@@ -127,10 +127,6 @@ export default {
           myThis.isLoading=false;
         });
 
-
-          
-
-
     },
     async fetchTechnologies() {
             try {
