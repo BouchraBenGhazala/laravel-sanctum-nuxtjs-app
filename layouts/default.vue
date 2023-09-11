@@ -15,13 +15,21 @@
       </template>
 
       <template #end>
-          <b-navbar-item tag="div">
-              <div class="buttons">
-                  <a class="button is-light has-text-weight-bold" @click.prevent="logout">
-                      Logout
-                  </a>
-              </div>
-          </b-navbar-item>
+          <b-dropdown aria-role="list" >
+            <template #trigger>
+                <b-button
+                    :label="user.name"
+                    icon-left="account"
+                    type="is-primary"
+                    icon-right="menu-up"/>
+            </template>
+            <b-dropdown-item aria-role="listitem" >   
+              <NuxtLink to="profile" exact-active-class="is-active"><b-button label="Profile" icon-left="account" class="btn-link" /></NuxtLink>    
+            </b-dropdown-item>
+            <b-dropdown-item aria-role="listitem">        
+                <b-button label="Logout" icon-left="logout" @click.prevent="logout" class="btn-link" />
+              </b-dropdown-item>
+        </b-dropdown>
       </template>
   </b-navbar>
   
@@ -58,6 +66,7 @@ export default {
   name: 'DefaultLayout',
   data () {
     return {
+      user: this.$auth.user.data,
       items: [
         {
           title: 'Home',
@@ -127,4 +136,13 @@ export default {
   }
 }
 </script>
+
+<style>
+.btn-link {
+  border: none !important;
+  background: none !important;
+  padding: 0 !important;
+}
+
+</style>
 

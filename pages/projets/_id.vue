@@ -108,7 +108,7 @@ export default {
       
       var myThis=this;
 
-      axios.put(`http://localhost:8000/api/projets/${this.ProjectId}/update`, this.Project, {withCredentials:true})
+      axios.put(`http://localhost:8000/api/projets/${this.ProjectId}/update`, {'project': this.Project, 'selectedTechnologies' : this.selectedTechnologies}, {withCredentials:true})
         .then(res => {
           console.log(res,'res');
           alert(res.data.message);
@@ -118,6 +118,7 @@ export default {
           this.Project.slug = '';
           this.Project.url = '';
           this.Project.status = '';
+          this.selectedTechnologies={};
 
           this.isLoading=false;
           this.isLoadingTitle="Loading";

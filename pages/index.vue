@@ -4,8 +4,7 @@
     <div class="container">
       <h1 class="title">Dashboard</h1>
 
-      <p>Hi {{ user.name }}</p>
-
+      <p class="subtitle">Hi {{ user.name }}</p>
     </div>
   </section>
 </template>

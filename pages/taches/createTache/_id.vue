@@ -2,8 +2,8 @@
     <div class="mt-5">
       <div class="card">
         <div class="card-header d-flex justify-content-between">
-          <h4 class="fs-5 fw-normal">Edit Task</h4>
-          <NuxtLink :to="`/cardTaches/${Task.projet_id}`" class="btn btn-danger">Back</NuxtLink>
+          <h4 class="fs-5 fw-normal">Add Task</h4>
+          <NuxtLink to="/projets" class="btn btn-danger">Back</NuxtLink>
         </div>
         <div class="card-body">
           <!-- {{ this.errorList }} -->
@@ -11,7 +11,7 @@
             <Loading :title="isLoadingTitle" />
           </div>
           <div v-else>
-            <form @submit.prevent="updateTask">
+            <form @submit.prevent="saveTask">
               <div class="mb-3">
                 <label for="title">Title</label>
                 <input type="text" class="form-control" v-model="Task.title">
@@ -23,47 +23,47 @@
                 <span class="text-danger" v-if="this.errorList.description">{{ this.errorList.description[0]}}</span>
               </div>
               <div class="mb-3">
-                <label for="slug">Slug</label>
+                <label for="slug">Priority</label>
                 <input type="text" class="form-control" v-model="Task.priority">
-                <span class="text-danger" v-if="this.errorList.slug">{{ this.errorList.priority[0]}}</span>
+                <span class="text-danger" v-if="this.errorList.priority">{{ this.errorList.slug[0]}}</span>
               </div>
               <div class="mb-3">
-                <label for="status">Status</label>
+                <label for="status">Type</label>
                 <input type="text" class="form-control" v-model="Task.type">
-                <span class="text-danger" v-if="this.errorList.type">{{ this.errorList.type[0]}}</span>
+                <span class="text-danger" v-if="this.errorList.type">{{ this.errorList.status[0]}}</span>
               </div>
               <div class="mb-3">
                 <label for="url">Due date</label>
                 <input type="text" class="form-control" v-model="Task.due_date">
-                <span class="text-danger" v-if="this.errorList.due_date">{{ this.errorList.due_date[0]}}</span>
+                <span class="text-danger" v-if="this.errorList.due_date">{{ this.errorList.url[0]}}</span>
               </div>
               <b-field label="User" class="mb-5">
               <b-select placeholder="Select a user" v-model="Task.user_id" expanded>
                   <option v-for="user in User" :key="user.id" :value="user.id">{{ user.name }}</option>
               </b-select>
           </b-field>
-          <!-- <b-field label="Project" class="mb-5">
-              <b-select placeholder="Select a projet" v-model="Task.projet_id" expanded>
+          <!-- <b-field label="Project" class="mb-5"> -->
+              <!-- <b-select placeholder="Select a projet" v-model="Task.projet_id" expanded>
                   <option v-for="project in Projet" :key="project.id" :value="project.id">{{ project.title }}</option>
-              </b-select>
-          </b-field> -->
-              <div class="mb-3">
-                <button type="submit" class="btn btn-primary">Update</button>
+              </b-select> -->
+    
+          <!-- </b-field> -->
+          <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Save</button>
               </div>
             </form>
           </div>
         </div>
       </div>
     </div>
-    </template>
-    
+  </template>
+  
   <script>
   import axios from 'axios';
   
   export default {
     data() {
       return {
-        TaskId:'',
         Task: {
           title: '',
           description: '',
@@ -71,7 +71,7 @@
           type: '',
           due_date: '',
           user_id:'',
-          projet_id:''
+          projet_id:this.$route.params.id
         },
         User:[],
         Projet:[],
@@ -82,35 +82,17 @@
       }
     },
     mounted(){
-      this.TaskId= this.$route.params.id;
-      // alert(this.ProjectId)
-      this.getTask(this.TaskId);
       this.fetchUsers(); 
       this.fetchProjets(); 
-
-  
     },
     methods: {
-      getTask(TaskId){
-  
+      async saveTask() {
         this.isLoading=true;
-        axios.get(`http://localhost:8000/api/tasks/${TaskId}/edit`).then(res=>{
-  
-            this.isLoading =false,
-            this.Task=res.data.message;
-            console.log("data:");
-            console.log(res)
-        });
-      },
-  
-      updateTask() {
-  
-        this.isLoading =true,
-        this.isLoadingTitle="Updating";
+        this.isLoadingTitle="Saving";
   
         var myThis=this;
   
-        axios.put(`http://localhost:8000/api/tasks/${this.TaskId}/update`, this.Task, {withCredentials:true})
+        await axios.post("http://localhost:8000/api/tasks", this.Task, {withCredentials:true})
           .then(res => {
             console.log(res,'res');
             alert(res.data.message);
@@ -120,6 +102,8 @@
             this.Task.priority = '';
             this.Task.type = '';
             this.Task.due_date = '';
+            this.Task.user_id= '';
+            this.Task.projet_id = '';
   
             this.isLoading=false;
             this.isLoadingTitle="Loading";
@@ -127,15 +111,13 @@
           }).catch(function(error){
             console.log(error,'error')
             if(error.response){
-              if(error.response.status==404){
+              if(error.response.status==422){
                 myThis.errorList= error.response.data.errors;
               }
             }
             myThis.isLoading=false;
           });
       },
-
-      
       async fetchUsers() {
             try {
                 const response = await axios.get("http://localhost:8000/api/users"); // Adjust the API endpoint URL
@@ -155,10 +137,15 @@
                 console.error('Error fetching roles:', error);
             }
         },
-
     }
   
    
   };
   </script>
-    
+  
+  <style scoped>
+  .mt-5 {
+    padding: 20px;
+  }
+  </style>
+  

@@ -24,6 +24,7 @@
                     <th>Technologies</th>
                     <th>Created at</th>
                     <th>Updated at</th>
+                    <th>Tasks</th>
                     <!-- <th>Deleted at</th> -->
                     <th>Action</th>
                 </tr>
@@ -45,6 +46,8 @@
               </td>
                     <td>{{ project.created_at}}</td>
                     <td>{{ project.updated_at}}</td>
+                    <td><NuxtLink :to="`/cardTaches/${project.id}`" class="btn btn-primary btn-sm mx-1">View tasks</NuxtLink>
+                        <NuxtLink :to="`/taches/createTache/${project.id}`" class="btn btn-danger btn-sm mx-1">Add Task</NuxtLink></td>
                     <!-- <td>{{ project.deleted_at}}</td> -->
                     <td>
                         <NuxtLink :to="`/projets/${project.id}`" class="btn btn-success btn-sm mx-2">Edit</NuxtLink>
