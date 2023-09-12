@@ -5,7 +5,10 @@
       <h1 class="title">Hi {{ user.name }}</h1>
       <div class="alert alert-warning" role="alert">Your tasks</div></div>
     <div class="row row-cols-1 row-cols-md-3 g-4" >
-    <div class="col" v-for="(task,index) in Tasks"  :key="index">
+      <div v-if="isLoading">
+        <Loading2 :title="isLoadingTitle" />
+        </div>
+    <div v-else class="col" v-for="(task,index) in Tasks"  :key="index">
         <div class="card h-100 bg-warning    mb-3 mt-3" v-if="user.id == task.user.id">
             <div class="card-header d-flex justify-content-between">
             <h4 class="fs-5 fw-normal fw-bold">{{ task.title}}</h4>
@@ -29,7 +32,7 @@
         </div>
 
     </div>
-  
+
 
     </div>
   </section>
@@ -42,6 +45,8 @@ export default {
     return {
       user: this.$auth.user.data,
       Tasks:{},
+      isLoading: true,
+      isLoadingTitle: 'Loading',
     }
   },
   mounted(){
@@ -51,10 +56,11 @@ export default {
             getTasks(){
                 axios.get("http://localhost:8000/api/tasks").then(res=>{
 
-  
-                    this.Tasks=res.data.message;
-                    console.log("data:");
-                    console.log(res)
+                this.isLoading =false,
+                this.Technologies=res.data.message;
+                this.Tasks=res.data.message;
+                console.log("data:");
+                console.log(res)
                 });
             },
 
