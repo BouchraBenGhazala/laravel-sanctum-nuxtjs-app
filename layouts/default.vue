@@ -24,7 +24,7 @@
                     icon-right="menu-up"/>
             </template>
             <b-dropdown-item aria-role="listitem" >   
-              <NuxtLink to="profile" exact-active-class="is-active"><b-button label="Profile" icon-left="account" class="btn-link" /></NuxtLink>    
+              <NuxtLink to="/profile" exact-active-class="is-active"><b-button label="Profile" icon-left="account" class="btn-link" /></NuxtLink>    
             </b-dropdown-item>
             <b-dropdown-item aria-role="listitem">        
                 <b-button label="Logout" icon-left="logout" @click.prevent="logout" class="btn-link" />
@@ -83,41 +83,41 @@ export default {
           icon: 'text-box-multiple',
           to: { name: 'projets' }
         },
-        {
-          title: 'Taches',
-          icon: 'file-tree',
-          to: { name: 'taches' }
-        },
+        // {
+        //   title: 'Taches',
+        //   icon: 'file-tree',
+        //   to: { name: 'taches' }
+        // },
         {
           title: 'Technologies',
           icon: 'file-tree',
           to: { name: 'technologies' }
         },
-        {
-          title: 'Suivi de progresse',
-          icon: 'trending-up',
-          to: { name: 'progress' }
-        },
-        {
-          title: "Vue d'ensemble",
-          icon: 'account-multiple',
-          to: { name: 'vue-ensemble' }
-        },
+        // {
+        //   title: 'Suivi de progresse',
+        //   icon: 'trending-up',
+        //   to: { name: 'progress' }
+        // },
+        // {
+        //   title: "Vue d'ensemble",
+        //   icon: 'account-multiple',
+        //   to: { name: 'vue-ensemble' }
+        // },
         {
           title: 'Utilisateurs',
           icon: 'account-group',
           to: { name: 'users' }
         },
-        {
-          title: 'Fichiers',
-          icon: 'file-multiple',
-          to: { name: 'files' }
-        },
-        {
-          title: 'Notifications',
-          icon: 'bell',
-          to: { name: 'notifs' }
-        },
+        // {
+        //   title: 'Fichiers',
+        //   icon: 'file-multiple',
+        //   to: { name: 'files' }
+        // },
+        // {
+        //   title: 'Notifications',
+        //   icon: 'bell',
+        //   to: { name: 'notifs' }
+        // },
         {
           title: 'Paramètres',
           icon: 'cog',

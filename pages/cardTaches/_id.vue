@@ -49,7 +49,7 @@
             <h4 class="fs-5 fw-normal fw-bold">{{ task.title}}</h4>
             <div>
             <NuxtLink :to="`/taches/${task.id}`" class="btn btn-success btn-sm">Edit</NuxtLink>
-            <button type="button" class="btn btn-danger btn-sm" @click="">Delete</button>
+            <button type="button" class="btn btn-danger btn-sm" @click="deleteTask($event,task.id)">Delete</button>
             </div>
 
         </div>
@@ -65,7 +65,7 @@
         <div class="card-footer">
             <small class="text-muted "><span class="fw-bold">Creation:</span> {{ formatTimeAgo(task.created_at) }}</small>
             <small class="text-muted"><span class="fw-bold">Last update:</span> {{ formatTimeAgo(task.updated_at) }}</small>
-            <small class="text-muted"><span class="fw-bold">Due date:</span> {{ formatTimeAgo(task.due_date) }}</small>
+            <small class="text-muted"><span class="fw-bold">Due date:</span> {{ formatTimeLeft(task.due_date) }}</small>
         </div>
         </div>
         <div v-else>
@@ -90,7 +90,7 @@
         <div class="card-footer">
             <small class="text-muted "><span class="fw-bold">Creation:</span> {{ formatTimeAgo(task.created_at) }}</small>
             <small class="text-muted"><span class="fw-bold">Last update:</span> {{ formatTimeAgo(task.updated_at) }}</small>
-            <small class="text-muted"><span class="fw-bold">Due date:</span> {{ formatTimeAgo(task.due_date) }}</small>
+            <small class="text-muted"><span class="fw-bold">Due date:</span> {{ formatTimeLeft(task.due_date) }}</small>
         </div>
     </div>
         </div>
@@ -166,6 +166,26 @@ import axios from 'axios';
 
             }
         }
+    },
+    
+    formatTimeLeft(timestamp) {
+                const currentTime = new Date();
+                const dueTime = new Date(timestamp);
+                const timeDifference = Math.floor((dueTime - currentTime) / 60000); // Difference in minutes
+
+                const hours = Math.floor(timeDifference / 60);
+                const days = Math.floor(hours / 24);
+                if(days<1){
+                    return 'Overdue'
+                }
+                else if (days === 1) {
+                    return '1 day left';
+                } else {
+                    return `${days} days left`;
+                }
+
+            
+    
     },
         }
         ,
