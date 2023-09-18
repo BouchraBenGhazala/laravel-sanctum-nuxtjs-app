@@ -1,6 +1,6 @@
 
 <template>
-    <div>
+    <div v-if="AdminUser">
         <div class="card mt-5 mr-5" >
             <div class="card-header d-flex justify-content-between">
         <h4 class="fs-5 fw-normal">Technologies</h4>
@@ -44,6 +44,9 @@
 
         </div>
     </div>
+    <div v-else class="alert alert-danger mt-3" role="alert">
+  Sorry! Only admins can access the technologies page.
+</div>
 </template>
 
 <script>
@@ -54,11 +57,15 @@ import axios from 'axios';
                 Technologies:{},
                 isLoading: true,
                 isLoadingTitle: 'Loading',
+                Users:{},
+                user: this.$auth.user.data,
+                AdminUser: null,
             };
 
         },
         mounted(){
             this.getTechnologies();
+            this.getUsers();
         },
         methods:{
             getTechnologies(){
@@ -70,7 +77,19 @@ import axios from 'axios';
                     console.log(res)
                 });
             },
+            getUsers(){
+                axios.get("http://localhost:8000/api/users").then(res=>{
 
+                    this.isLoading =false,
+                    this.Users=res.data.message;
+                    console.log("data:");
+                    console.log(res);
+
+                    this.AdminUser = this.Users.find(user => {
+                    return user.id === this.user.id && user.role.name === 'admin';
+                });
+            });
+            },
             deleteTechnologie(event, technologieId){
 
                 if(confirm('Are you sure, you want to delete this data?')){

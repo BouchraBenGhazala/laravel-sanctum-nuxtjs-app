@@ -1,7 +1,8 @@
 <template>
-    <div>
+    <div v-if="AdminManagerUser">
+        <!-- <div v-if="user.id==usr.id"> -->
         <div class="card mt-5 mr-5" >
-            <div class="card-header d-flex justify-content-between">
+            <div class="card-header d-flex justify-content-between" >
         <h4 class="fs-5 fw-normal">Project Lists</h4>
         <NuxtLink to="/projets/create" class="btn btn-danger">Add Project</NuxtLink>
       </div>
@@ -11,7 +12,7 @@
             <div v-if="isLoading">
                 <Loading :title="isLoadingTitle" />
                 </div>
-        <div v-else>
+        <div v-else >
             <table class="table table-striped table-bordered">
             <thead>
                 <tr>
@@ -63,7 +64,11 @@
       <div class="card-body">
 
         </div>
+    <!-- </div> -->
     </div>
+    <div v-else class="alert alert-danger mt-3" role="alert">
+  Sorry! Only admins and project managers can access the project page.
+</div>
 </template>
 
 <script>
@@ -72,6 +77,9 @@ import axios from 'axios';
         data(){
             return{
                 Projects:{},
+                Users:{},
+                user: this.$auth.user.data,
+                AdminManagerUser: null,
                 isLoading: true,
                 isLoadingTitle: 'Loading',
             };
@@ -79,6 +87,7 @@ import axios from 'axios';
         },
         mounted(){
             this.getProjects();
+            this.getUsers();
         },
         methods:{
             getProjects(){
@@ -105,7 +114,21 @@ import axios from 'axios';
                         
                     });
                 }
-            }
+            },
+            getUsers(){
+                axios.get("http://localhost:8000/api/users").then(res=>{
+
+                    this.isLoading =false,
+                    this.Users=res.data.message;
+                    console.log("data:");
+                    console.log(res);
+
+                    this.AdminManagerUser = this.Users.find(user => {
+                    return user.id === this.user.id && user.role.name === 'admin'||'chef de projet';
+                });
+            });
+            },
+
         }
     }
 </script>

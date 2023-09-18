@@ -1,5 +1,5 @@
 <template>
-    <div class="mt-5">
+    <div class="mt-5" v-if="AdminUser">
       <div class="card">
         <div class="card-header d-flex justify-content-between">
           <h4 class="fs-5 fw-normal">Edit User</h4>
@@ -46,6 +46,9 @@
         </div>
       </div>
     </div>
+    <div v-else class="alert alert-danger mt-3" role="alert">
+  Sorry! Only admins can update users.
+</div>
     </template>
     
   <script>
@@ -56,6 +59,7 @@
       return {
         UserId:'',
         User: {
+          id:'',
           name: '',
           email: '',
           password: '',
@@ -64,7 +68,10 @@
         Role:[],
         isLoading: false,
         isLoadingTitle: 'Loading',
-        errorList:{}
+        errorList:{},
+        user: this.$auth.user.data,
+        Users:{},
+        AdminUser: null,
   
       }
     },
@@ -73,26 +80,43 @@
       // alert(this.ProjectId)
       this.getUser(this.UserId);
       this.fetchRoles(); // Fetch roles when the component is mounted
-
-  
+      this.getUsers();
     },
     methods: {
       getUser(UserId){
+        
         this.isLoading=true;
 
         axios.get(`http://localhost:8000/api/users/${UserId}/edit`).then(res=>{
             this.isLoading =false,
             this.User=res.data.message;
             console.log("data:");
-            console.log(res)
+            console.log(res);
+
+  
         });
       },
   
+      getUsers(){
+                axios.get("http://localhost:8000/api/users").then(res=>{
+
+                    this.isLoading =false,
+                    this.Users=res.data.message;
+                    console.log("data:");
+                    console.log(res);
+
+                    this.AdminUser = this.Users.find(user => {
+                    return user.id === this.user.id && user.role.name === 'admin';
+                });
+            });
+            },
       updateUser() {
   
         this.isLoading =true,
         this.isLoadingTitle="Updating";
   
+      
+
         var myThis=this;
   
         axios.put(`http://localhost:8000/api/users/${this.UserId}/update`, this.User, {withCredentials:true})
@@ -108,6 +132,7 @@
   
             this.isLoading=false;
             this.isLoadingTitle="Loading";
+
   
           }).catch(function(error){
             console.log(error,'error')

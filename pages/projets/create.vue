@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-5">
+  <div class="mt-5" v-if="AdminUser">
     <div class="card">
       <div class="card-header d-flex justify-content-between">
         <h4 class="fs-5 fw-normal">Add Project</h4>
@@ -64,6 +64,9 @@
       </div>
     </div>
   </div>
+  <div v-else class="alert alert-danger mt-3" role="alert">
+  Sorry! Only admins can create projects.
+</div>
 </template>
 
 <script>
@@ -86,11 +89,16 @@ export default {
       isLoadingTitle: 'Loading',
       errorList:{},
       lastProjectId:null,
+      Users:{},
+      user: this.$auth.user.data,
+      AdminUser: null,
+
 
     }
   },
   mounted(){
       this.fetchTechnologies(); 
+      this.getUsers();
     },
   methods: {
     async saveProject() {
@@ -137,7 +145,19 @@ export default {
                 console.error('Error fetching technologies:', error);
             }
         },
+        getUsers(){
+                axios.get("http://localhost:8000/api/users").then(res=>{
 
+                    this.isLoading =false,
+                    this.Users=res.data.message;
+                    console.log("data:");
+                    console.log(res);
+
+                    this.AdminUser = this.Users.find(user => {
+                    return user.id === this.user.id && user.role.name === 'admin';
+                });
+            });
+            },
 
             
         }

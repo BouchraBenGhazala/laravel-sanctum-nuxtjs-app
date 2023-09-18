@@ -9,10 +9,9 @@
         <Loading2 :title="isLoadingTitle" />
         </div>
     <div v-else class="col" v-for="(task,index) in Tasks"  :key="index">
-        <div class="card h-100 bg-warning    mb-3 mt-3" v-if="user.id == task.user.id">
+        <div class="card h-100 bg-warning mb-3 mt-3" v-if="user.id == task.user.id">
             <div class="card-header d-flex justify-content-between">
             <h4 class="fs-5 fw-normal fw-bold">{{ task.title}}</h4>
-
 
         </div>
         <div class="card-body">

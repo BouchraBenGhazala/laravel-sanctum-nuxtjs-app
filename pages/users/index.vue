@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="AdminUser">
         <div class="card mt-5 mr-5" >
             <div class="card-header d-flex justify-content-between">
         <h4 class="fs-5 fw-normal">Users List</h4>
@@ -45,6 +45,9 @@
 
         </div>
     </div>
+    <div v-else class="alert alert-danger mt-3" role="alert">
+  Sorry! Only admins can access the users page.
+</div>
 </template>
 
 <script>
@@ -55,6 +58,9 @@ import axios from 'axios';
                 Users:{},
                 isLoading: true,
                 isLoadingTitle: 'Loading',
+                Users:{},
+                user: this.$auth.user.data,
+                AdminUser: null,
             };
 
         },
@@ -68,7 +74,11 @@ import axios from 'axios';
                     this.isLoading =false,
                     this.Users=res.data.message;
                     console.log("data:");
-                    console.log(res)
+                    console.log(res);
+
+                    this.AdminUser = this.Users.find(user => {
+                    return user.id === this.user.id && user.role.name === 'admin';
+                });
                 });
             },
 

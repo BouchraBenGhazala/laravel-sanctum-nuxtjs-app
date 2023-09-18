@@ -199,6 +199,6 @@ import axios from 'axios';
 
 <style scoped>
 .faded-content {
-  opacity: 0.2;
+  opacity: 0.1;
 }
 </style>
